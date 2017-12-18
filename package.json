@@ -9,7 +9,8 @@
     "node": "~6.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "bootstrap": "npm install; node index.js"
   },
   "dependencies": {
     "actions-on-google": "^1.5.x",
