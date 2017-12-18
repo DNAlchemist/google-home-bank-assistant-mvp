@@ -1,3 +1,5 @@
 /node_modules/
 .firebaserc
 npm-debug.log
+google-home.iml
+/.idea/
