@@ -9,8 +9,7 @@
     "node": "~6.0"
   },
   "scripts": {
-    "start": "firebase serve --only functions:dialogflowFirebaseFulfillment",
-    "deploy": "firebase deploy --only functions:dialogflowFirebaseFulfillment"
+    "start": "node index.js"
   },
   "dependencies": {
     "actions-on-google": "^1.5.x",

@@ -1,8 +1,22 @@
 'use strict';
 
-const functions = require('firebase-functions'); // Cloud Functions for Firebase library
+// const functions = require('firebase-functions'); // Cloud Functions for Firebase library
+const express = require('express');
+const server = express();
+
+const bodyParser = require('body-parser');
+server.use(bodyParser.json({
+  verify: function (req, res, buf, encoding) {
+    // raw body for signature check
+    req.rawBody = buf.toString();
+  }
+}));
+
+const REST_PORT = (process.env.PORT || 5000);
+
 const DialogflowApp = require('actions-on-google').DialogflowApp; // Google Assistant helper library
-exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+exports.dialogflowFirebaseFulfillment = server.post('/webhook', (request, response) => {
+
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
     if (request.body.result) {
@@ -301,6 +315,9 @@ const richResponsesV2 = [{
     }
 ];
 
+server.listen(REST_PORT, function () {
+  console.log(`Service is ready on port ${REST_PORT}`);
+});
 
 
 /////////////////////////////
