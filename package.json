@@ -1,10 +1,16 @@
 {
-  "name": "dialogflowFirebaseFulfillment",
-  "description": "This is the default fulfillment for a Dialogflow agents using Cloud Functions for Firebase",
+  "name": "googleHomeBankAssistant",
+  "description": "This is the allow to manage your bank account with google assistant",
   "version": "0.0.1",
   "private": true,
-  "license": "Apache Version 2.0",
-  "author": "Google Inc.",
+  "license": "MIT",
+  "author": "DNAlchemist",
+  "contributors": [
+    {
+      "name": "DNAlchemist",
+      "email": "mikhalev.ruslan@gmail.com"
+    }
+  ],
   "engines": {
     "node": "~6.0"
   },
