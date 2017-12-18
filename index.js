@@ -343,7 +343,7 @@ function currencyRates(receiver) {
                 var promise = new Promise((resolve, reject) => {
                     var r = fetch(c.ratesByDate[0].currencyRates, "code", "CBK");
                     incline(r.description, "Д", function(s) {
-                        resolve(c.description + " -  " + r.rate + " по " + s);
+                        resolve(c.description + " - " + r.rate + " по " + s);
                     });
                 });
                 promises.push(promise);
