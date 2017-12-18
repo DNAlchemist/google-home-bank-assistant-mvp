@@ -53,7 +53,7 @@ function processV1Request(request, response) {
             }
         },
         'input.currency': () => {
-            currencyRates((str) => {
+            currencyRates(request.body.result, (str) => {
                 // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
                 if (requestSource === googleAssistantRequest) {
                     sendGoogleResponse(str); // Send simple response to user
@@ -323,7 +323,8 @@ server.listen(REST_PORT, function () {
 /////////////////////////////
 ////////// MODULES //////////
 /////////////////////////////
-function currencyRates(receiver) {
+function currencyRates(speech, receiver) {
+    var parameters = speech.parameters;
 
     var DEBUG = true
     var https = require('https');
@@ -340,13 +341,16 @@ function currencyRates(receiver) {
             var data = JSON.parse(json);
             var promises = []
             data.currencies.forEach(function(c) {
-                var promise = new Promise((resolve, reject) => {
-                    var r = fetch(c.ratesByDate[0].currencyRates, "code", "CBK");
-                    incline(r.description, "Д", function(s) {
-                        resolve(c.description + " - " + r.rate + " по " + s);
+                if(!parameters.currency || c.code === parameters.currency) {
+
+                    var promise = new Promise((resolve, reject) => {
+                        var r = fetch(c.ratesByDate[0].currencyRates, "code", "CBK");
+                        incline(r.description, "Д", function(s) {
+                            resolve(c.description + " - " + r.rate + " по " + s);
+                        });
                     });
-                });
-                promises.push(promise);
+                    promises.push(promise);
+                }
             });
             Promise.all(promises).then(values => {
                 receiver(values.join(". "));

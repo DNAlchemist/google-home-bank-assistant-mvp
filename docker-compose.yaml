@@ -1,7 +1,7 @@
 version: "2"
 services:
   node:
-    image: "node:8"
+    image: "vitta/nodemon:7"
     user: "node"
     working_dir: /home/node/app
     volumes:
