@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "bootstrap": "npm install; node index.js"
+    "bootstrap": "npm install; nodemon index.js"
   },
   "dependencies": {
     "actions-on-google": "1.6.1",
