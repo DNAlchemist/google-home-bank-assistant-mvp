@@ -38,6 +38,16 @@ function processV1Request(request, response) {
                 sendResponse('Hello, Welcome to my Dialogflow agent!'); // Send simple response to user
             }
         },
+        'input.currency': () => {
+            currencyRates((str) => {
+                // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
+                if (requestSource === googleAssistantRequest) {
+                    sendGoogleResponse(str); // Send simple response to user
+                } else {
+                    sendResponse(str); // Send simple response to user
+                }
+            });
+        },
         // The default fallback intent has been matched, try to recover (https://dialogflow.com/docs/intents#fallback_intents)
         'input.unknown': () => {
             // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
@@ -290,3 +300,115 @@ const richResponsesV2 = [{
         'card': richResponseV2Card
     }
 ];
+
+
+
+/////////////////////////////
+////////// MODULES //////////
+/////////////////////////////
+function currencyRates(receiver) {
+
+    var DEBUG = true
+    var https = require('https');
+    var qs = require('querystring');
+
+    var request = https.request(currency().options(), function(res) {
+        res.setEncoding('utf8');
+        var json = "";
+        res.on('data', function(chunk) {
+            json += chunk;
+        });
+        res.on('end', function(chunk) {
+            debug('Response: ' + json);
+            var data = JSON.parse(json);
+            var promises = []
+            data.currencies.forEach(function(c) {
+                var promise = new Promise((resolve, reject) => {
+                    var r = fetch(c.ratesByDate[0].currencyRates, "code", "CBK");
+                    incline(r.description, "Д", function(s) {
+                        resolve(c.description + " -  " + r.rate + " по " + s);
+                    });
+                });
+                promises.push(promise);
+            });
+            Promise.all(promises).then(values => {
+                receiver(values.join(". "));
+            });
+        });
+    });
+
+    request.write(json({
+        operationId: "Currency:GetCurrencyRates"
+    }));
+    request.end();
+
+    function incline(w, c, callback) {
+        var request = https.request(morpher().options(w), function(res) {
+            res.setEncoding('utf8');
+            var json = "";
+            res.on('data', function(chunk) {
+                json += chunk;
+            });
+            res.on('end', function(chunk) {
+                debug('Response: ' + json);
+                var data = JSON.parse(json);
+                callback(data[c])
+            });
+        });
+        request.end();
+    }
+
+    function debug(s) {
+        if (DEBUG) {
+            console.log(s);
+        }
+    }
+
+    function morpher() {
+        return {
+            options: function(w) {
+                return {
+                    host: 'ws3.morpher.ru',
+                    port: 443,
+                    path: '/russian/declension?' + qs.stringify({
+                        s: w
+                    }),
+                    method: 'GET',
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            }
+        }
+    }
+
+
+    function fetch(array, field, value) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i][field] == value) {
+                return array[i];
+            }
+        }
+    }
+
+    function currency() {
+        return {
+            options: function() {
+                return {
+                    host: 'alfa-mobile.alfabank.ru',
+                    port: 443,
+                    path: '/ALFAJMB/gate',
+                    method: 'POST',
+                    headers: {
+                        "jmb-protocol-version": "1.0",
+                        "jmb-protocol-service": "Currency"
+                    }
+                }
+            }
+        }
+    }
+
+    function json(str) {
+        return JSON.stringify(str)
+    }
+}
