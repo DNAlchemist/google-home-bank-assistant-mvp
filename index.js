@@ -53,12 +53,13 @@ function processV1Request(request, response) {
 
     // Localization //
     const locale = request.body.lang;
+    console.log("LANG = " + locale);
     const dict = (str) => {
-        if (!l10n[locale][str]) {
+        if (!l10n[str][locale]) {
             console.error(`Locale ${locale} is not supported`);
             return str;
         }
-        return l10n[locale][str];
+        return l10n[str][locale];
     };
 
     // Actions (entry point) //
