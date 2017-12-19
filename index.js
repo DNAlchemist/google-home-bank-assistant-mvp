@@ -162,7 +162,7 @@ function currencyRates(speech, receiver) {
             const data = JSON.parse(json);
             const promises = [];
             data.currencies.forEach(function (c) {
-                if (!parameters.currency || c.code === parameters.currency) {
+                if (!parameters.currency || parameters.currency.includes(c.code)) {
 
                     const promise = new Promise((resolve, reject) => {
                         const r = fetch(c.ratesByDate[0].currencyRates, "code", "CBK");
