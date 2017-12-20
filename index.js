@@ -78,6 +78,7 @@ function processV1Request(request, response) {
     };
 
     if (!actionHandlers[action]) {
+        console.error(`Action with name ${action} is not found`);
         action = 'default';
     }
 
