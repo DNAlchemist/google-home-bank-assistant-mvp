@@ -1,5 +1,6 @@
 const https = require('https');
 const qs = require('querystring');
+const util = require('util');
 
 const Logger = require('./logger.js');
 const log = new Logger(Logger.lookupName(__filename));
@@ -21,6 +22,10 @@ const l10n = {
     "response.currency_not_found": {
         "en": "currency_not_found",
         "ru": "currency_not_found"
+    },
+    "response.currency_rate": {
+        "en": "The purchase rate of 1 %s is %s rubles, the sale rate is %s rubles.",
+        "ru": "Курс покупки 1 %s: %s рублей, курс продажи: %s рублей"
     }
 };
 
@@ -28,6 +33,9 @@ function L10N(lang) {
     this.lang = lang;
 }
 
+/**
+ * Returns a formatted localized string using the specified template and arguments
+ */
 L10N.prototype.format = function (str) {
     if (!l10n[str]) {
         log.error(`Localization key '${this.lang}' is not found`);
@@ -37,8 +45,17 @@ L10N.prototype.format = function (str) {
         log.error(`Locale ${this.lang} is not supported`);
         return str;
     }
-    return l10n[str][this.lang];
+    const template = l10n[str][this.lang];
+    return util.format.apply(undefined, buildArgumentList(template, arguments))
 };
+
+function buildArgumentList(template, arguments) {
+    const argumentList = [template];
+    for (let i = 1; i < arguments.length; i++) {
+        argumentList.push(arguments[i]);
+    }
+    return argumentList;
+}
 
 /**
  * Incline russian words

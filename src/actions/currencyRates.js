@@ -28,7 +28,7 @@ const currencyRates = (l10n, speech, receiver) => {
                             return;
                         }
                         l10n.incline(c.description, "Р", function (s) {
-                            resolve(`Курс покупки 1 ${s.toLowerCase()} ${r.sellRate} рублей, курс продажи ${r.buyRate} рублей`);
+                            resolve(l10n.format("response.currency_rate", s.toLowerCase(), r.sellRate, r.buyRate));
                         });
                     });
                     promises.push(promise);
