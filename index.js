@@ -1,10 +1,15 @@
 'use strict';
 
 const express = require('express');
-const https = require('https');
 const qs = require('querystring');
-
 const server = express();
+
+const L10N = require('./src/l10n.js');
+
+/////////////////////////////
+////////// MODULES //////////
+/////////////////////////////
+const currencyRates = require('./src/actions/currencyRates.js');
 
 const bodyParser = require('body-parser');
 server.use(bodyParser.json({
@@ -18,8 +23,8 @@ const REST_PORT = (process.env.PORT || 5000);
 
 const DialogflowApp = require('actions-on-google').DialogflowApp;
 server.post('/webhook', (request, response) => {
-    console.log('Dialogflow Request headers: ' + json(request.headers));
-    console.log('Dialogflow Request body: ' + json(request.body));
+    console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+    console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
     if (request.body.result) {
         processV1Request(request, response);
     } else if (request.body.queryResult) {
@@ -31,17 +36,6 @@ server.post('/webhook', (request, response) => {
     }
 });
 
-const l10n = {
-    "response.unknown": {
-        "en": "I'm having trouble, can you try that again?",
-        "ru": "Я не могу разобрать, что вы сказали. Не могли ли вы повторить?"
-    },
-    "response.default": {
-        "en": "Welcome! My name is Eva, I'm an alpha bank assistant. How can I help you?",
-        "ru": "Добро пожаловать! Меня зовут Ева, я ассистент альфа-банка. Чем могу вам помочь?"
-    }
-};
-
 function processV1Request(request, response) {
     let action = request.body.result.action;
     let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
@@ -51,64 +45,7 @@ function processV1Request(request, response) {
         response: response
     });
 
-    //////////////////////////////////
-    ////////// LOCALIZATION //////////
-    //////////////////////////////////
-    const lang = request.body.lang;
-    console.log("LANG = " + lang);
-    const dict = (str) => {
-        if (!l10n[str][lang]) {
-            console.error(`Locale ${lang} is not supported`);
-            return str;
-        }
-        return l10n[str][lang];
-    };
-
-    ///////////////////////////////
-    ////////// INCLINING //////////
-    ///////////////////////////////
-    /**
-     * Incline russian words
-     * incline('Ассистент', 'Д', (str) => { assert str == 'Ассисенту' });
-     */
-    function incline(w, c, callback) {
-        if(lang !== 'ru') {
-            callback(w);
-            return;
-        }
-        const request = https.request(morpher().options(w), function (res) {
-            res.setEncoding('utf8');
-            let json = "";
-            res.on('data', function (chunk) {
-                json += chunk;
-            });
-            res.on('end', function (chunk) {
-                debug('Response: ' + json);
-                const data = JSON.parse(json);
-                callback(data[c])
-            });
-        });
-        request.end();
-    }
-
-    function morpher() {
-        return {
-            options: function (w) {
-                return {
-                    host: 'ws3.morpher.ru',
-                    port: 443,
-                    path: '/russian/declension?' + qs.stringify({
-                        s: w
-                    }),
-                    method: 'GET',
-                    headers: {
-                        "Accept": "application/json"
-                    }
-                }
-            }
-        }
-    }
-
+    const l10n = new L10N(request.body.lang);
 
     ///////////////////////////////////////////
     ////////// ACTIONS (ENTRY POINT) //////////
@@ -117,25 +54,25 @@ function processV1Request(request, response) {
 
         'input.welcome': () => {
             responseWith({
-                speech: dict('response.default'),
-                text: dict('response.default') + ":)"
+                speech: l10n.format('response.default'),
+                text: l10n.format('response.default') + ":)"
             });
         },
 
         'input.currency': () => {
-            currencyRates(request.body.result, (str) => {
+            currencyRates(l10n, request.body.result, (str) => {
                 responseWith(str);
             });
         },
 
         'input.unknown': () => {
-            responseWith('response.unknown');
+            responseWith(l10n.format('response.unknown'));
         },
 
         'default': () => {
             responseWith({
-                speech: dict('response.default'),
-                text: dict('response.default') + ":)"
+                speech: l10n.format('response.default'),
+                text: l10n.format('response.default') + ":)"
             });
         }
     };
@@ -145,72 +82,6 @@ function processV1Request(request, response) {
     }
 
     actionHandlers[action]();
-
-
-    /////////////////////////////
-    ////////// MODULES //////////
-    /////////////////////////////
-    function currencyRates(speech, receiver) {
-        const parameters = speech.parameters;
-
-        const DEBUG = true;
-
-        function debug(s) {
-            if (DEBUG) {
-                console.log(s);
-            }
-        }
-
-        const request = https.request(currency().options(), function (res) {
-            res.setEncoding('utf8');
-            let json = "";
-            res.on('data', function (chunk) {
-                json += chunk;
-            });
-            res.on('end', function (chunk) {
-                debug('Response: ' + json);
-                const data = JSON.parse(json);
-                const promises = [];
-                data.currencies.forEach(function (c) {
-                    if (!parameters.currency || parameters.currency.includes(c.code)) {
-
-                        const promise = new Promise((resolve, reject) => {
-                            const r = fetch(c.ratesByDate[0].currencyRates, "code", "TCQ");
-                            incline(c.description, "Р", function (s) {
-                                resolve(`Курс покупки 1 ${s.toLowerCase()} ${r.sellRate} рублей, курс продажи ${r.buyRate} рублей`);
-                            });
-                        });
-                        promises.push(promise);
-                    }
-                });
-                Promise.all(promises).then(values => {
-                    receiver(values.join(". "));
-                });
-            });
-        });
-
-        request.write(json({
-            operationId: "Currency:GetCurrencyRates"
-        }));
-        request.end();
-
-        function currency() {
-            return {
-                options: function () {
-                    return {
-                        host: 'alfa-mobile.alfabank.ru',
-                        port: 443,
-                        path: '/ALFAJMB/gate',
-                        method: 'POST',
-                        headers: {
-                            "jmb-protocol-version": "1.0",
-                            "jmb-protocol-service": "Currency"
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     ///////////////////////////////////////
     ////////// RESPONSE CREATORS //////////
@@ -223,7 +94,7 @@ function processV1Request(request, response) {
                 speech: responseToUser.speech || responseToUser.displayText,
                 displayText: responseToUser.displayText || responseToUser.speech
             });
-            console.log('Response to Dialogflow (AoG): ' + json(googleResponse));
+            console.log('Response to Dialogflow (AoG): ' + JSON.stringify(googleResponse));
             app.ask(googleResponse);
         }
     }
@@ -238,7 +109,7 @@ function processV1Request(request, response) {
             let responseJson = {};
             responseJson.speech = responseToUser.speech || responseToUser.displayText;
             responseJson.displayText = responseToUser.displayText || responseToUser.speech;
-            console.log('Response to Dialogflow: ' + json(responseJson));
+            console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
             response.json(responseJson);
         }
     }
@@ -255,40 +126,3 @@ function processV1Request(request, response) {
 server.listen(REST_PORT, function () {
     console.log(`Service is ready on port ${REST_PORT}`);
 });
-
-
-/////////////////////////////
-///////// UTILITIES /////////
-/////////////////////////////
-
-/**
- * Convert javascript object to json
- */
-function json(jsObject) {
-    return JSON.stringify(jsObject)
-}
-
-/**
- * Extract the first element from the array, satisfying the condition
- * for example:
- * array = [ { a: 1, b: 2 }, {a: 3, b: 4, c: 5}
- * assert fetch(array, 'a', 1) == { a: 1, b: 2 }
- */
-function fetch(array, field, value) {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i][field] === value) {
-            return array[i];
-        }
-    }
-}
-
-/**
- * Global debug function
- */
-const DEBUG = false;
-
-function debug(s) {
-    if (DEBUG) {
-        console.log(s);
-    }
-}
