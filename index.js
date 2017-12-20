@@ -51,18 +51,68 @@ function processV1Request(request, response) {
         response: response
     });
 
-    // Localization //
-    const locale = request.body.lang;
-    console.log("LANG = " + locale);
+    //////////////////////////////////
+    ////////// LOCALIZATION //////////
+    //////////////////////////////////
+    const lang = request.body.lang;
+    console.log("LANG = " + lang);
     const dict = (str) => {
-        if (!l10n[str][locale]) {
-            console.error(`Locale ${locale} is not supported`);
+        if (!l10n[str][lang]) {
+            console.error(`Locale ${lang} is not supported`);
             return str;
         }
-        return l10n[str][locale];
+        return l10n[str][lang];
     };
 
-    // Actions (entry point) //
+    ///////////////////////////////
+    ////////// INCLINING //////////
+    ///////////////////////////////
+    /**
+     * Incline russian words
+     * incline('Ассистент', 'Д', (str) => { assert str == 'Ассисенту' });
+     */
+    function incline(w, c, callback) {
+        if(lang !== 'ru') {
+            callback(w);
+            return;
+        }
+        const request = https.request(morpher().options(w), function (res) {
+            res.setEncoding('utf8');
+            let json = "";
+            res.on('data', function (chunk) {
+                json += chunk;
+            });
+            res.on('end', function (chunk) {
+                debug('Response: ' + json);
+                const data = JSON.parse(json);
+                callback(data[c])
+            });
+        });
+        request.end();
+    }
+
+    function morpher() {
+        return {
+            options: function (w) {
+                return {
+                    host: 'ws3.morpher.ru',
+                    port: 443,
+                    path: '/russian/declension?' + qs.stringify({
+                        s: w
+                    }),
+                    method: 'GET',
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            }
+        }
+    }
+
+
+    ///////////////////////////////////////////
+    ////////// ACTIONS (ENTRY POINT) //////////
+    ///////////////////////////////////////////
     const actionHandlers = {
 
         'input.welcome': () => {
@@ -96,6 +146,75 @@ function processV1Request(request, response) {
 
     actionHandlers[action]();
 
+
+    /////////////////////////////
+    ////////// MODULES //////////
+    /////////////////////////////
+    function currencyRates(speech, receiver) {
+        const parameters = speech.parameters;
+
+        const DEBUG = true;
+
+        function debug(s) {
+            if (DEBUG) {
+                console.log(s);
+            }
+        }
+
+        const request = https.request(currency().options(), function (res) {
+            res.setEncoding('utf8');
+            let json = "";
+            res.on('data', function (chunk) {
+                json += chunk;
+            });
+            res.on('end', function (chunk) {
+                debug('Response: ' + json);
+                const data = JSON.parse(json);
+                const promises = [];
+                data.currencies.forEach(function (c) {
+                    if (!parameters.currency || parameters.currency.includes(c.code)) {
+
+                        const promise = new Promise((resolve, reject) => {
+                            const r = fetch(c.ratesByDate[0].currencyRates, "code", "TCQ");
+                            incline(c.description, "Р", function (s) {
+                                resolve(`Курс покупки 1 ${s.toLowerCase()} ${r.sellRate} рублей, курс продажи ${r.buyRate} рублей`);
+                            });
+                        });
+                        promises.push(promise);
+                    }
+                });
+                Promise.all(promises).then(values => {
+                    receiver(values.join(". "));
+                });
+            });
+        });
+
+        request.write(json({
+            operationId: "Currency:GetCurrencyRates"
+        }));
+        request.end();
+
+        function currency() {
+            return {
+                options: function () {
+                    return {
+                        host: 'alfa-mobile.alfabank.ru',
+                        port: 443,
+                        path: '/ALFAJMB/gate',
+                        method: 'POST',
+                        headers: {
+                            "jmb-protocol-version": "1.0",
+                            "jmb-protocol-service": "Currency"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ///////////////////////////////////////
+    ////////// RESPONSE CREATORS //////////
+    ///////////////////////////////////////
     function sendGoogleResponse(responseToUser) {
         if (typeof responseToUser === 'string') {
             app.ask(responseToUser);
@@ -137,71 +256,6 @@ server.listen(REST_PORT, function () {
     console.log(`Service is ready on port ${REST_PORT}`);
 });
 
-/////////////////////////////
-////////// MODULES //////////
-/////////////////////////////
-function currencyRates(speech, receiver) {
-    const parameters = speech.parameters;
-
-    const DEBUG = false;
-
-    function debug(s) {
-        if (DEBUG) {
-            console.log(s);
-        }
-    }
-
-    const request = https.request(currency().options(), function (res) {
-        res.setEncoding('utf8');
-        let json = "";
-        res.on('data', function (chunk) {
-            json += chunk;
-        });
-        res.on('end', function (chunk) {
-            debug('Response: ' + json);
-            const data = JSON.parse(json);
-            const promises = [];
-            data.currencies.forEach(function (c) {
-                if (!parameters.currency || parameters.currency.includes(c.code)) {
-
-                    const promise = new Promise((resolve, reject) => {
-                        const r = fetch(c.ratesByDate[0].currencyRates, "code", "CBK");
-                        incline(r.description, "Д", function (s) {
-                            resolve(c.description + " - " + r.rate + " по " + s);
-                        });
-                    });
-                    promises.push(promise);
-                }
-            });
-            Promise.all(promises).then(values => {
-                receiver(values.join(". "));
-            });
-        });
-    });
-
-    request.write(json({
-        operationId: "Currency:GetCurrencyRates"
-    }));
-    request.end();
-
-    function currency() {
-        return {
-            options: function () {
-                return {
-                    host: 'alfa-mobile.alfabank.ru',
-                    port: 443,
-                    path: '/ALFAJMB/gate',
-                    method: 'POST',
-                    headers: {
-                        "jmb-protocol-version": "1.0",
-                        "jmb-protocol-service": "Currency"
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 /////////////////////////////
 ///////// UTILITIES /////////
@@ -236,46 +290,5 @@ const DEBUG = false;
 function debug(s) {
     if (DEBUG) {
         console.log(s);
-    }
-}
-
-/////////////////////////////
-///////// INCLINING /////////
-/////////////////////////////
-/**
- * Incline russian words
- * incline('Ассистент', 'Д', (str) => { assert str == 'Ассисенту' });
- */
-function incline(w, c, callback) {
-    const request = https.request(morpher().options(w), function (res) {
-        res.setEncoding('utf8');
-        let json = "";
-        res.on('data', function (chunk) {
-            json += chunk;
-        });
-        res.on('end', function (chunk) {
-            debug('Response: ' + json);
-            const data = JSON.parse(json);
-            callback(data[c])
-        });
-    });
-    request.end();
-}
-
-function morpher() {
-    return {
-        options: function (w) {
-            return {
-                host: 'ws3.morpher.ru',
-                port: 443,
-                path: '/russian/declension?' + qs.stringify({
-                    s: w
-                }),
-                method: 'GET',
-                headers: {
-                    "Accept": "application/json"
-                }
-            }
-        }
     }
 }
