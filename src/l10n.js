@@ -2,7 +2,7 @@ const https = require('https');
 const qs = require('querystring');
 
 const Logger = require('./logger.js');
-const log = new Logger(Logger.lookup(__filename));
+const log = new Logger(Logger.lookupName(__filename));
 log.debugEnabled = false;
 
 const l10n = {

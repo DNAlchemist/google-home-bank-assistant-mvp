@@ -17,7 +17,7 @@ Logger.prototype.error = function (s) {
     console.error(`${this.name} ${s}`);
 };
 
-Logger.lookup = (filename) => {
+Logger.lookupName = (filename) => {
     return path.basename(filename)
 };
 
