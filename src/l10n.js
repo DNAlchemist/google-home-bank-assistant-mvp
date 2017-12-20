@@ -13,6 +13,14 @@ const l10n = {
     "response.default": {
         "en": "Welcome! My name is Eva, I'm an alpha bank assistant. How can I help you?",
         "ru": "Добро пожаловать! Меня зовут Ева, я ассистент альфа-банка. Чем могу вам помочь?"
+    },
+    "response.currency_rate_not_found": {
+        "en": "currency_rate_not_found",
+        "ru": "currency_rate_not_found"
+    },
+    "response.currency_not_found": {
+        "en": "currency_not_found",
+        "ru": "currency_not_found"
     }
 };
 

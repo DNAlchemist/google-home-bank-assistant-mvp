@@ -23,6 +23,10 @@ const currencyRates = (l10n, speech, receiver) => {
 
                     const promise = new Promise((resolve, reject) => {
                         const r = c.ratesByDate[0].currencyRates.filter((i) => i.code === "TCQ").pop();
+                        if(!r) {
+                            resolve(l10n.format("response.currency_rate_not_found"));
+                            return;
+                        }
                         l10n.incline(c.description, "Р", function (s) {
                             resolve(`Курс покупки 1 ${s.toLowerCase()} ${r.sellRate} рублей, курс продажи ${r.buyRate} рублей`);
                         });
@@ -31,6 +35,10 @@ const currencyRates = (l10n, speech, receiver) => {
                 }
             });
             Promise.all(promises).then(values => {
+                if(!values.length) {
+                    receiver(l10n.format("response.currency_not_found"));
+                    return;
+                }
                 receiver(values.join(". "));
             });
         });
