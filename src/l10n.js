@@ -3,7 +3,7 @@ const qs = require('querystring');
 
 const Logger = require('./logger.js');
 const log = new Logger(Logger.lookup(__filename));
-log.debugEnabled = true;
+log.debugEnabled = false;
 
 const l10n = {
     "response.unknown": {
