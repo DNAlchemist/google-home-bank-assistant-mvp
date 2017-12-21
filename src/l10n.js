@@ -79,7 +79,7 @@ L10N.prototype.format = function (str) {
     }
     if (!l10n[str][this.lang]) {
         log.error(`Locale ${this.lang} is not supported`);
-        return str;
+        return l10n[str]['en-us'];
     }
     const template = l10n[str][this.lang];
     return util.format.apply(undefined, buildArgumentList(template, arguments))
