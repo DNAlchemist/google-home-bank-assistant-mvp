@@ -36,8 +36,28 @@ const l10n = {
         "ru": "Вы получете ту же самую суммку так как запрашиваемые валюты одинаковые, %s %s"
     },
     "response.convert_money_impossible": {
-        "en": "Convertation from %s %s to %s impossible, try another please",
+        "en": "Convert from %s %s to %s impossible, try another please",
         "ru": "Конвертация из %s %s в %s невозможна, попробуйте другие валюты"
+    },
+    "USD": {
+        "en": "dollar",
+        "ru": "доллар"
+    },
+    "RUB": {
+        "en": "ruble",
+        "ru": "рубли"
+    },
+    "CHF":{
+        "en": "frank",
+        "ru": "франк"
+    },
+    "GBP": {
+        "en": "pound",
+        "ru": "фунт"
+    },
+    "EUR": {
+        "en": "euro",
+        "ru": "евро"
     }
 };
 
