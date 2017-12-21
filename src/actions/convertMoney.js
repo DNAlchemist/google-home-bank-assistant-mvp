@@ -39,7 +39,7 @@ const convertMoney = (l10n, speech, receiver) => {
                     receiver(l10n.format("response.currency_not_found"));
                     return;
                 }
-                receiver(values.join(". "));
+                receiver(values.join(".\n"));
             });
         });
     });
