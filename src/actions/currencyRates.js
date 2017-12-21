@@ -19,7 +19,7 @@ const currencyRates = (l10n, speech, receiver) => {
             const data = JSON.parse(json);
             const promises = [];
             data.currencies.forEach(function (c) {
-                if (!parameters.currency.length || parameters.currency.includes(c.code)) {
+                if ((parameters.currency && !parameters.currency.length) || parameters.currency.includes(c.code)) {
 
                     const promise = new Promise((resolve, reject) => {
                         const r = c.ratesByDate[0].currencyRates.filter((i) => i.code === "TCQ").pop();
