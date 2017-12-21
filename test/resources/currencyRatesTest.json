@@ -1,35 +1,61 @@
 {
-   "id":"9823edc5-5c8a-4620-b170-42f4afacd1ec",
-   "timestamp":"2017-12-18T13:52:01.679Z",
-   "lang":"en",
+   "id":"f7e7aefe-ccfa-4b3e-a254-5a3c732afd66",
+   "timestamp":"2017-12-21T11:07:50.337Z",
+   "lang":"ru",
    "result":{
       "source":"agent",
-      "resolvedQuery":"Show currency",
+      "resolvedQuery":"курс за вчера",
       "speech":"",
       "action":"input.currency",
       "actionIncomplete":false,
       "parameters":{
+         "date":"2017-12-20",
+         "currency":[
 
+         ]
       },
       "contexts":[
+         {
+            "name":"date",
+            "parameters":{
+               "date":"2017-12-20",
+               "date.original":"вчера",
+               "currency":[
 
+               ],
+               "currency.original":""
+            },
+            "lifespan":5
+         },
+         {
+            "name":"currency",
+            "parameters":{
+               "date":"2017-12-20",
+               "date.original":"вчера",
+               "currency":[
+
+               ],
+               "currency.original":""
+            },
+            "lifespan":5
+         }
       ],
       "metadata":{
-         "intentId":"b3888014-d633-4de4-ae97-948fc67e2264",
+         "intentId":"3387dcc6-bb63-42eb-905e-466254911d67",
          "webhookUsed":"true",
          "webhookForSlotFillingUsed":"false",
-         "intentName":"Currency Intent"
+         "intentName":"Currency Rate"
       },
       "fulfillment":{
-         "speech":"",
+         "speech":"Я затрудняюсь ответить на твой вопрос4. 2017-12-20",
          "messages":[
             {
                "type":0,
-               "speech":""
+               "speech":"Я затрудняюсь ответить на твой вопрос4. 2017-12-20"
             }
          ]
       },
-      "score":1
+      "score":0.8199999928474426
    },
    "status":{
       "code":200,
