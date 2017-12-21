@@ -10,7 +10,7 @@ const L10N = require('./src/l10n.js');
 ////////// MODULES //////////
 /////////////////////////////
 const currencyRates = require('./src/actions/currencyRates.js');
-const converMoney = require('./src/actions/converMoney.js');
+const convertMoney = require('./src/actions/convertMoney.js');
 const todoList = require('./src/actions/todoList.js');
 
 const bodyParser = require('body-parser');
