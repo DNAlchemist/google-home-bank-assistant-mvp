@@ -2,7 +2,7 @@ const https = require('https');
 
 const Logger = require('../logger.js');
 const log = new Logger(Logger.lookupName(__filename));
-log.debugEnabled = false;
+log.debugEnabled = true;
 
 const convertMoney = (l10n, speech, receiver) => {
     const parameters = speech.parameters;
@@ -17,30 +17,51 @@ const convertMoney = (l10n, speech, receiver) => {
         res.on('end', function (chunk) {
             log.debug('Response: ' + json);
             const data = JSON.parse(json);
-            const promises = [];
-            data.currencies.forEach(function (c) {
-                if (!parameters.currency || parameters.currency.includes(c.code)) {
 
-                    const promise = new Promise((resolve, reject) => {
-                        const r = c.ratesByDate[0].currencyRates.filter((i) => i.code === "TCQ").pop();
-                        if(!r) {
-                            resolve(l10n.format("response.currency_rate_not_found"));
-                            return;
-                        }
-                        l10n.incline(c.description, "Р", function (s) {
-                            resolve(l10n.format("response.currency_rate", s.toLowerCase(), r.sellRate, r.buyRate));
-                        });
-                    });
-                    promises.push(promise);
-                }
+            let sourceMoney = parameters.sourceMoney;
+            let resultMoney = {};
+
+            resultMoney.currency = parameters.resultCurrency;
+            log.debug(`sourceMoney = ${JSON.stringify(sourceMoney)}`)
+            log.debug(`resultMoney = ${JSON.stringify(resultMoney)}`)
+
+            if (sourceMoney.currency === resultMoney.currency) {
+                receiver(l10n.format("response.convert_money_the_same", sourceMoney.amount, sourceMoney.currency))
+            }
+
+
+            let sourceMoneyObject = data.currencies.filter(function (cur) {
+                return cur.code === sourceMoney.currency;
             });
-            Promise.all(promises).then(values => {
-                if(!values.length) {
-                    receiver(l10n.format("response.currency_not_found"));
-                    return;
-                }
-                receiver(values.join(".\n"));
+
+            log.debug(`sourceMoneyObject = ${JSON.stringify(sourceMoneyObject[0])}`);
+
+            let sellRateObject = sourceMoneyObject[0].ratesByDate[0].currencyRates.filter(function (cur) {
+                return cur.code === "TCQ";
             });
+
+            log.debug(`sellRateObject = ${JSON.stringify(sellRateObject)}`);
+
+            let sellRate = sellRateObject[0].sellRate;
+
+            log.debug(`sellRate = ${sellRate}`);
+
+            if (resultMoney.currency !== "RUB") {
+                let resultMoneyObject = data.currencies.filter(function (cur) {
+                    return cur.code === resultMoney.currency;
+                });
+                let buyRate = resultMoneyObject[0].ratesByDate[0].currencyRates[0].buyRate;
+
+                log.debug(`buyRate = ${buyRate}`);
+
+                resultMoney.amount = sourceMoney.amount * sellRate / buyRate;
+            } else {
+                resultMoney.amount = sourceMoney.amount * sellRate;
+            }
+
+            log.debug(`resultMoney = ${JSON.stringify(resultMoney)}`);
+
+            receiver(l10n.format("response.convert_money", resultMoney.amount, resultMoney.currency))
         });
     });
 

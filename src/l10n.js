@@ -26,6 +26,38 @@ const l10n = {
     "response.currency_rate": {
         "en": "The purchase rate of 1 %s is %s rubles, the sale rate is %s rubles.",
         "ru": "Курс покупки 1 %s: %s рублей, курс продажи: %s рублей"
+    },
+    "response.convert_money": {
+        "en": "By the current rate you receive %s %s.",
+        "ru": "По текущему курсу Вы получите %s в %s."
+    },
+    "response.convert_money_the_same": {
+        "en": "Yor receive the same value of the money %s %s",
+        "ru": "Вы получете ту же самую суммку так как запрашиваемые валюты одинаковые, %s %s"
+    },
+    "response.convert_money_impossible": {
+        "en": "Convert from %s %s to %s impossible, try another please",
+        "ru": "Конвертация из %s %s в %s невозможна, попробуйте другие валюты"
+    },
+    "USD": {
+        "en": "dollar",
+        "ru": "доллар"
+    },
+    "RUB": {
+        "en": "ruble",
+        "ru": "рубли"
+    },
+    "CHF":{
+        "en": "frank",
+        "ru": "франк"
+    },
+    "GBP": {
+        "en": "pound",
+        "ru": "фунт"
+    },
+    "EUR": {
+        "en": "euro",
+        "ru": "евро"
     }
 };
 
