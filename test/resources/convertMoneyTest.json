@@ -1,11 +1,11 @@
 {
-  "id": "6d89b0e7-deb7-498b-8f58-c9dde640fa82",
-  "timestamp": "2017-12-21T11:08:56.776Z",
+  "id": "7ab800db-1cca-4b51-a0d7-4587ce980958",
+  "timestamp": "2017-12-21T11:29:24.038Z",
   "lang": "ru",
   "result": {
     "source": "agent",
     "resolvedQuery": "Сколько будет 5 евро в рублях",
-    "action": "input.convert",
+    "action": "input.convertMoney",
     "actionIncomplete": false,
     "parameters": {
       "unit-currency": {
