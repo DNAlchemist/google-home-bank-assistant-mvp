@@ -11,6 +11,7 @@ const L10N = require('./src/l10n.js');
 /////////////////////////////
 const currencyRates = require('./src/actions/currencyRates.js');
 const converMoney = require('./src/actions/converMoney.js');
+const todoList = require('./src/actions/todoList.js');
 
 const bodyParser = require('body-parser');
 server.use(bodyParser.json({
@@ -68,6 +69,12 @@ function processV1Request(request, response) {
 
         'input.convertMoney': () => {
             convertMoney(l10n, request.body.result, (str) => {
+                responseWith(str);
+            });
+        },
+
+        'input.todoList': () => {
+            todoList(app, l10n, request.body.result, (str) => {
                 responseWith(str);
             });
         },
