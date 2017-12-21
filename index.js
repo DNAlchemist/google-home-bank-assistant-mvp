@@ -10,6 +10,7 @@ const L10N = require('./src/l10n.js');
 ////////// MODULES //////////
 /////////////////////////////
 const currencyRates = require('./src/actions/currencyRates.js');
+const converMoney = require('./src/actions/converMoney.js');
 
 const bodyParser = require('body-parser');
 server.use(bodyParser.json({
@@ -65,8 +66,8 @@ function processV1Request(request, response) {
             });
         },
 
-        'input.convert': () => {
-            currencyRates(l10n, request.body.result, (str) => {
+        'input.convertMoney': () => {
+            convertMoney(l10n, request.body.result, (str) => {
                 responseWith(str);
             });
         },

@@ -4,7 +4,7 @@ const Logger = require('../logger.js');
 const log = new Logger(Logger.lookupName(__filename));
 log.debugEnabled = false;
 
-const convertCurrency = (l10n, speech, receiver) => {
+const convertMoney = (l10n, speech, receiver) => {
     const parameters = speech.parameters;
 
     const request = https.request(currency().options(), function (res) {
@@ -67,4 +67,4 @@ const convertCurrency = (l10n, speech, receiver) => {
     }
 };
 
-module.exports = currencyRates;
+module.exports = convertMoney;
