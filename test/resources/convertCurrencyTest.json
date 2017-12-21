@@ -1,0 +1,36 @@
+{
+  "id": "6d89b0e7-deb7-498b-8f58-c9dde640fa82",
+  "timestamp": "2017-12-21T11:08:56.776Z",
+  "lang": "ru",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "Сколько будет 5 евро в рублях",
+    "action": "input.convert",
+    "actionIncomplete": false,
+    "parameters": {
+      "unit-currency": {
+        "amount": 5,
+        "currency": "EUR"
+      },
+      "currency-name": "RUB"
+    },
+    "contexts": [],
+    "metadata": {
+      "intentId": "5e7d1527-f9d8-45cc-905d-2fbf1574d407",
+      "webhookUsed": "false",
+      "webhookForSlotFillingUsed": "false",
+      "intentName": "Convert money"
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": []
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "64cb0311-ad49-49ff-b84b-b45c7654af93"
+}
