@@ -18,52 +18,44 @@ const convertMoney = (l10n, speech, receiver) => {
             log.debug('Response: ' + json);
             const data = JSON.parse(json);
 
-            let sourceMoney = parameters.sourceMoney
+            let sourceMoney = parameters.sourceMoney;
             let resultMoney = {};
 
             resultMoney.currency = parameters.resultCurrency;
             log.debug(`sourceMoney = ${JSON.stringify(sourceMoney)}`)
             log.debug(`resultMoney = ${JSON.stringify(resultMoney)}`)
 
+            if (sourceMoney.currency === resultMoney.currency) {
+                receiver(l10n.format("response.convert_money_the_same", sourceMoney.amount, sourceMoney.currency))
+            }
+
 
             let sourceMoneyObject = data.currencies.filter(function (cur) {
                 return cur.code === sourceMoney.currency;
             });
 
-            log.debug(`sellRate = ${sourceMoneyObject.ratesByDate[0].currencyRates[0].sellRate}`);
-            log.debug(`sourceMoneyObject = ${JSON.stringify(sourceMoneyObject)}`);
+            log.debug(`sourceMoneyObject = ${JSON.stringify(sourceMoneyObject[0])}`);
 
-            // if (resultMoney.currency !== "RUB") {
-            //     let rublesSourceMoney = sourceMoneyObject.
-            // }
+            let sellRate = sourceMoneyObject[0].ratesByDate[0].currencyRates[0].sellRate;
 
+            log.debug(`sellRate = ${sellRate}`);
 
-            receiver("");
-            // const promises = [];
-            //
-            // data.currencies.forEach(function (c) {
-            //     if (!parameters.currency || parameters.currency.includes(c.code)) {
-            //
-            //         const promise = new Promise((resolve, reject) => {
-            //             const r = c.ratesByDate[0].currencyRates.filter((i) => i.code === "TCQ").pop();
-            //             if(!r) {
-            //                 resolve(l10n.format("response.currency_rate_not_found"));
-            //                 return;
-            //             }
-            //             l10n.incline(c.description, "Р", function (s) {
-            //                 resolve(l10n.format("response.currency_rate", s.toLowerCase(), r.sellRate, r.buyRate));
-            //             });
-            //         });
-            //         promises.push(promise);
-            //     }
-            // });
-            // Promise.all(promises).then(values => {
-            //     if(!values.length) {
-            //         receiver(l10n.format("response.currency_not_found"));
-            //         return;
-            //     }
-            //     receiver(values.join(". "));
-            // });
+            if (resultMoney.currency !== "RUB") {
+                let resultMoneyObject = data.currencies.filter(function (cur) {
+                    return cur.code === resultMoney.currency;
+                });
+                let buyRate = resultMoneyObject[0].ratesByDate[0].currencyRates[0].buyRate;
+
+                log.debug(`buyRate = ${buyRate}`);
+
+                resultMoney.amount = sourceMoney.amount * sellRate / buyRate;
+            } else {
+                resultMoney.amount = sourceMoney.amount * sellRate;
+            }
+
+            log.debug(`resultMoney = ${JSON.stringify(resultMoney)}`);
+
+            receiver(l10n.format("response.convert_money", resultMoney.amount, resultMoney.currency))
         });
     });
 
