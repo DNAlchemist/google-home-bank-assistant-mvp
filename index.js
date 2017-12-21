@@ -65,6 +65,12 @@ function processV1Request(request, response) {
             });
         },
 
+        'input.convert': () => {
+            currencyRates(l10n, request.body.result, (str) => {
+                responseWith(str);
+            });
+        },
+
         'input.unknown': () => {
             responseWith(l10n.format('response.unknown'));
         },
