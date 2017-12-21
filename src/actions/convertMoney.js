@@ -36,7 +36,13 @@ const convertMoney = (l10n, speech, receiver) => {
 
             log.debug(`sourceMoneyObject = ${JSON.stringify(sourceMoneyObject[0])}`);
 
-            let sellRate = sourceMoneyObject[0].ratesByDate[0].currencyRates[0].sellRate;
+            let sellRateObject = sourceMoneyObject[0].ratesByDate[0].currencyRates.filter(function (cur) {
+                return cur.code === "TCQ";
+            });
+
+            log.debug(`sellRateObject = ${JSON.stringify(sellRateObject)}`);
+
+            let sellRate = sellRateObject[0].sellRate;
 
             log.debug(`sellRate = ${sellRate}`);
 
