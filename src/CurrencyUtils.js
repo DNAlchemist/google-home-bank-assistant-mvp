@@ -1,22 +1,27 @@
 const CurrencyDict = {
     "USD": {
         "en": ["dollar","dollars","dollars"],
+        "en-us": ["dollar","dollars","dollars"],
         "ru": ["доллар","доллара","долларов"]
     },
     "RUB": {
         "en": ["ruble","rubles","rubles"],
+        "en-us": ["ruble","rubles","rubles"],
         "ru": ["рубль","рубля","рублей"]
     },
     "CHF":{
         "en": ["frank","franks","franks"],
+        "en-us": ["frank","franks","franks"],
         "ru": ["франк","франков","франков"]
     },
     "GBP": {
         "en": ["pound","pounds","pounds"],
+        "en-us": ["pound","pounds","pounds"],
         "ru": ["фунт","фунт","фунт"]
     },
     "EUR": {
         "en": ["euro","euros","euros"],
+        "en-us": ["euro","euros","euros"],
         "ru": ["евро","евро","евро"]
     }
 };

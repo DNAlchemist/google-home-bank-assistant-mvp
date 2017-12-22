@@ -8,60 +8,49 @@ log.debugEnabled = false;
 
 const l10n = {
     "response.unknown": {
+        "en": "I'm having trouble, can you try that again?",
         "en-us": "I'm having trouble, can you try that again?",
         "ru": "Я не могу разобрать, что вы сказали. Не могли ли вы повторить?"
     },
     "response.default": {
+        "en": "Welcome! My name is Eva, I'm an alpha bank assistant. How can I help you?",
         "en-us": "Welcome! My name is Eva, I'm an alpha bank assistant. How can I help you?",
         "ru": "Привет! Меня зовут Катя, я твой личный помощник из Альфа Банка. У меня ты можешь узнать курс валют и совершать запланированные платежи. Чем я могу тебе помочь?"
     },
     "response.currency_rate_not_found": {
+        "en": "currency_rate_not_found",
         "en-us": "currency_rate_not_found",
         "ru": "currency_rate_not_found"
     },
     "response.currency_not_found": {
+        "en": "currency_not_found",
         "en-us": "currency_not_found",
         "ru": "currency_not_found"
     },
     "response.currency_rate": {
+        "en": "The purchase rate of 1 %s is %s rubles, the sale rate is %s rubles.",
         "en-us": "The purchase rate of 1 %s is %s rubles, the sale rate is %s rubles.",
         "ru": "Курс покупки 1 %s: %s рублей, курс продажи: %s рублей"
     },
     "response.convert_money": {
+        "en": "By the current rate you receive %s %s.",
         "en-us": "By the current rate you receive %s %s.",
         "ru": "По текущему курсу Вы получите %s в %s."
     },
     "response.convert_money_the_same": {
+        "en": "You're receive the same value of the money %s %s",
         "en-us": "You're receive the same value of the money %s %s",
         "ru": "Вы получите ту же самую сумму, так как запрашиваемые валюты одинаковые, %s %s"
     },
     "response.convert_money_impossible": {
+        "en": "Convert from %s %s to %s is impossible, try another, please",
         "en-us": "Convert from %s %s to %s is impossible, try another, please",
         "ru": "Конвертация из %s %s в %s невозможна, попробуйте другие валюты"
     },
     "response.todos_not_found": {
+        "en": "todos_not_found",
         "en-us": "todos_not_found",
         "ru": "todos_not_found"
-    },
-    "USD": {
-        "en-us": "dollar",
-        "ru": "доллар"
-    },
-    "RUB": {
-        "en-us": "ruble",
-        "ru": "рубли"
-    },
-    "CHF":{
-        "en-us": "frank",
-        "ru": "франк"
-    },
-    "GBP": {
-        "en-us": "pound",
-        "ru": "фунт"
-    },
-    "EUR": {
-        "en-us": "euro",
-        "ru": "евро"
     }
 };
 
