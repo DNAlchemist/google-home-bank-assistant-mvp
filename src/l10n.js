@@ -29,7 +29,7 @@ const l10n = {
     },
     "response.convert_money": {
         "en": "By the current rate you receive %s %s.",
-        "ru": "По текущему курсу Вы получите %s в %s."
+        "ru": "По текущему курсу Вы получите %s %s."
     },
     "response.convert_money_the_same": {
         "en": "Yor receive the same value of the money %s %s",
@@ -38,26 +38,6 @@ const l10n = {
     "response.convert_money_impossible": {
         "en": "Convert from %s %s to %s impossible, try another please",
         "ru": "Конвертация из %s %s в %s невозможна, попробуйте другие валюты"
-    },
-    "USD": {
-        "en": "dollar",
-        "ru": "доллар"
-    },
-    "RUB": {
-        "en": "ruble",
-        "ru": "рубли"
-    },
-    "CHF":{
-        "en": "frank",
-        "ru": "франк"
-    },
-    "GBP": {
-        "en": "pound",
-        "ru": "фунт"
-    },
-    "EUR": {
-        "en": "euro",
-        "ru": "евро"
     }
 };
 

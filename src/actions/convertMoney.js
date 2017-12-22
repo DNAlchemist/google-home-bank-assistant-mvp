@@ -1,6 +1,7 @@
 const https = require('https');
 
 const Logger = require('../logger.js');
+const plural = require('../CurrencyUtils.js');
 const log = new Logger(Logger.lookupName(__filename));
 log.debugEnabled = true;
 
@@ -26,7 +27,7 @@ const convertMoney = (l10n, speech, receiver) => {
             log.debug(`resultMoney = ${JSON.stringify(resultMoney)}`)
 
             if (sourceMoney.currency === resultMoney.currency) {
-                receiver(l10n.format("response.convert_money_the_same", sourceMoney.amount, sourceMoney.currency))
+                receiver(l10n.format("response.convert_money_the_same", sourceMoney.amount, plural(sourceMoney.currency, sourceMoney.amount, l10n.lang)))
             }
 
 
@@ -54,14 +55,14 @@ const convertMoney = (l10n, speech, receiver) => {
 
                 log.debug(`buyRate = ${buyRate}`);
 
-                resultMoney.amount = sourceMoney.amount * sellRate / buyRate;
+                resultMoney.amount = (sourceMoney.amount * sellRate / buyRate * 100) / 100;
             } else {
-                resultMoney.amount = sourceMoney.amount * sellRate;
+                resultMoney.amount = Math.round(sourceMoney.amount * sellRate * 100) / 100;
             }
 
             log.debug(`resultMoney = ${JSON.stringify(resultMoney)}`);
 
-            receiver(l10n.format("response.convert_money", resultMoney.amount, resultMoney.currency))
+            receiver(l10n.format("response.convert_money", resultMoney.amount, plural(resultMoney.currency, resultMoney.amount, l10n.lang)))
         });
     });
 
