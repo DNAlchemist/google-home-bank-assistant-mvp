@@ -32,11 +32,11 @@ const l10n = {
         "ru": "По текущему курсу Вы получите %s %s."
     },
     "response.convert_money_the_same": {
-        "en": "Yor receive the same value of the money %s %s",
-        "ru": "Вы получете ту же самую суммку так как запрашиваемые валюты одинаковые, %s %s"
+        "en": "You're receive the same value of the money %s %s",
+        "ru": "Вы получите ту же самую сумму, так как запрашиваемые валюты одинаковые, %s %s"
     },
     "response.convert_money_impossible": {
-        "en": "Convert from %s %s to %s impossible, try another please",
+        "en": "Convert from %s %s to %s is impossible, try another, please",
         "ru": "Конвертация из %s %s в %s невозможна, попробуйте другие валюты"
     }
 };
