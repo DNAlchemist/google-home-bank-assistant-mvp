@@ -34,16 +34,24 @@ const todoList = (app, l10n, speech, receiver) => {
                 const now = new Date(Date.now());
                 console.log(`${date}, ${now.getMonth()}`);
                 if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-                    todos.push(`${it.itemName}: ${it.amount.value / it.amount.minorUnits} ${it.amount.currency}`);
+                    const promise = new Promise((resolve, reject) => {
+                        l10n.incline(l10n.format(it.amount.currency), "Р", function (s) {
+                            resolve(`${it.itemName}: ${it.amount.value / it.amount.minorUnits} ${s}`);
+                        })
+                    });
+                    todos.push(promise);
                 }
             });
             if (!todos.length) {
                 receiver(l10n.format("response.todos_not_found"));
                 return;
             }
-            console.log(todos);
-            receiver("Запланированные на этот месяц операции: " + todos.join(".\n"));
+            Promise.all(todos).then(values => {
+                console.log(values);
+                receiver("Запланированные на этот месяц операции: " + values.join(".\n"));
+            });
         });
+        
         // const promises = [];
         // data.currencies.forEach(function (c) {
         //     if (!parameters.currency.length || parameters.currency.includes(c.code)) {
@@ -77,14 +85,14 @@ const todoList = (app, l10n, speech, receiver) => {
 
 function todo() {
     return {
-        options: function () {
+        options: function (data) {
             return {
                 host: 'testsense.alfabank.ru',
                 port: 443,
                 path: '/mobile/api/v2/todo',
                 method: 'GET',
                 headers: {
-                    "Authorization": "Bearer d7982282-2f63-39c5-b9ed-8ffcf723de61"
+                    "Authorization": "Bearer " + data.access_token
                 }
             }
         }
