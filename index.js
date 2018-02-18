@@ -12,6 +12,7 @@ const L10N = require('./src/l10n.js');
 const currencyRates = require('./src/actions/currencyRates.js');
 const convertMoney = require('./src/actions/convertMoney.js');
 const todoList = require('./src/actions/todoList.js');
+const todoInitPayment = require('./src/actions/todoInitPayment.js');
 
 const bodyParser = require('body-parser');
 server.use(bodyParser.json({
@@ -75,6 +76,14 @@ function processV1Request(request, response) {
 
         'input.todoList': () => {
             todoList(app, l10n, request.body.result, (str) => {
+                app.setContext()
+                responseWith(str);
+            });
+        },
+
+        'input.todoInitPayment': () => {
+            todoInitPayment(app, l10n, request.body.result, (str) => {
+                app.setContext()
                 responseWith(str);
             });
         },
