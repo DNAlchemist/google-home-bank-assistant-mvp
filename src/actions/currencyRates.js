@@ -27,8 +27,8 @@ const currencyRates = (l10n, speech, receiver) => {
                             resolve(l10n.format("response.currency_rate_not_found"));
                             return;
                         }
-                        l10n.incline(c.description, "Р", function (s) {
-                            resolve(l10n.format("response.currency_rate", s.toLowerCase(), r.sellRate, r.buyRate));
+                        l10n.incline(l10n.format(c.code), "Р", function (s) {
+                            resolve(l10n.format("response.currency_rate", s, r.sellRate, r.buyRate));
                         });
                     });
                     promises.push(promise);
