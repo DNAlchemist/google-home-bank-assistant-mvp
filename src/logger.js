@@ -1,6 +1,7 @@
 const path = require('path');
 
 function Logger(name) {
+    this.debugEnabled = process.env.DEBUG_ENABLED === 'true';
     this.name = name ? "[" + name + "]" : "";
 }
 

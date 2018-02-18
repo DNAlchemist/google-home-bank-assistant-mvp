@@ -3,7 +3,6 @@ const https = require('https');
 const Logger = require('../logger.js');
 const plural = require('../CurrencyUtils.js');
 const log = new Logger(Logger.lookupName(__filename));
-log.debugEnabled = true;
 
 const convertMoney = (l10n, speech, receiver) => {
     const parameters = speech.parameters;

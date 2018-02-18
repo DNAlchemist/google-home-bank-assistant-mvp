@@ -4,7 +4,6 @@ const util = require('util');
 
 const Logger = require('./logger.js');
 const log = new Logger(Logger.lookupName(__filename));
-log.debugEnabled = true;
 
 const l10n = {
     "response.unknown": {

@@ -2,7 +2,6 @@ const https = require('https');
 
 const Logger = require('../logger.js');
 const log = new Logger(Logger.lookupName(__filename));
-log.debugEnabled = false;
 
 const currencyRates = (l10n, speech, receiver) => {
     const parameters = speech.parameters;
