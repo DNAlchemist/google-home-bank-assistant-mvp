@@ -36,6 +36,10 @@ const convertMoney = (l10n, speech, receiver) => {
                 });
 
                 log.debug(`sourceMoneyObject = ${JSON.stringify(sourceMoneyObject[0])}`);
+                if(!sourceMoneyObject[0]) {
+                    receiver(l10n.format("response.currency_not_found"));
+                    return;
+                }
 
                 let sellRateObject = sourceMoneyObject[0].ratesByDate[0].currencyRates.filter(function (cur) {
                     return cur.code === "TCQ";
