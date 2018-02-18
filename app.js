@@ -1,10 +1,12 @@
 'use strict';
 
+const Logger = require('./src/logger.js');
+const L10N = require('./src/l10n.js');
+
 const express = require('express');
 const qs = require('querystring');
 const server = express();
-
-const L10N = require('./src/l10n.js');
+const log = new Logger(Logger.lookupName(__filename));
 
 /////////////////////////////
 ////////// MODULES //////////
@@ -24,15 +26,15 @@ server.use(bodyParser.json({
 
 const DialogflowApp = require('actions-on-google').DialogflowApp;
 server.post('/webhook', (request, response) => {
-    console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
-    console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+    log.debug('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+    log.debug('Dialogflow Request body: ' + JSON.stringify(request.body));
     if (request.body.result) {
         processV1Request(request, response);
     } else if (request.body.queryResult) {
-        console.log('Invalid Request: V2 webhook requests is not supported');
+        log.error('Invalid Request: V2 webhook requests is not supported');
         response.status(400).end('Invalid Webhook Request (v2 requests is not supported)');
     } else {
-        console.log('Invalid Request');
+        log.error('Invalid Request');
         return response.status(400).end('Invalid Webhook Request (v1 webhook request)');
     }
 });
@@ -116,7 +118,7 @@ function processV1Request(request, response) {
                 speech: responseToUser.speech || responseToUser.displayText,
                 displayText: responseToUser.displayText || responseToUser.speech
             });
-            console.log('Response to Dialogflow (AoG): ' + JSON.stringify(googleResponse));
+            log.debug('Response to Dialogflow (AoG): ' + JSON.stringify(googleResponse));
             app.ask(googleResponse);
         }
     }
@@ -131,7 +133,7 @@ function processV1Request(request, response) {
             let responseJson = {};
             responseJson.speech = responseToUser.speech || responseToUser.displayText;
             responseJson.displayText = responseToUser.displayText || responseToUser.speech;
-            console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
+            log.debug('Response to Dialogflow: ' + JSON.stringify(responseJson));
             response.json(responseJson);
         }
     }
