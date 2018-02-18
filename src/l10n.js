@@ -78,7 +78,7 @@ function L10N(lang) {
  */
 L10N.prototype.format = function (str) {
     if (!l10n[str]) {
-        log.error(`Localization key '${this.lang}' is not found`);
+        log.error(`Localization key '${str}' is not found`);
         return str;
     }
     if (!l10n[str][this.lang]) {
