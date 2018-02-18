@@ -1,0 +1,27 @@
+{
+   "id":"f7e7aefe-ccfa-4b3e-a254-5a3c732afd66",
+   "lang":"",
+   "result":{
+      "source":"agent",
+      "resolvedQuery":"",
+      "speech":"",
+      "action":"",
+      "actionIncomplete":false,
+      "parameters":{},
+      "contexts":[],
+      "metadata":{
+         "webhookUsed":"true",
+         "webhookForSlotFillingUsed":"false",
+         "intentName":""
+      },
+      "fulfillment":{
+      },
+      "score":1
+   },
+   "status":{
+      "code":200,
+      "errorType":"success",
+      "webhookTimedOut":false
+   },
+   "sessionId":"d2c14dff-872e-46db-a718-8fa763013c18"
+}
