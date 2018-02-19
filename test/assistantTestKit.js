@@ -10,19 +10,23 @@ const assistant = {
     use: function (server) {
         this.server = server;
     },
-    sendRequest: function (action, lang, query, callback) {
-        chai.request(this.server)
-            .post('/webhook')
-            .send(this.createQuery(lang, action, query))
-            .timeout(10000)
-            .end((err, res) => {
-                callback(err, {
-                    assertSpeech: function (text) {
-                        res.should.have.status(200);
-                        res.body.should.have.property('speech').eql(text);
-                    }
+    sendRequest: function (action, langs, query, callback) {
+        langs.forEach((lang) => {
+            chai.request(this.server)
+                .post('/webhook')
+                .send(this.createQuery(lang, action, query))
+                .timeout(1000)
+                .end(function(err, res) {
+                    callback(err, {
+                        assertSpeech: function (langForCheck, text) {
+                            if(lang === langForCheck) {
+                                res.should.have.status(200);
+                                res.body.should.have.property('speech').eql(text);
+                            }
+                        }
+                    });
                 });
-            });
+        })
     },
     createQuery: function (lang, action, obj) {
         const request = require('./resources/requestTemplate');
