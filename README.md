@@ -8,10 +8,15 @@
 ### Run with docker compose
 
     docker-compose up
-    
+
 ### Check the application is working correctly
 
 Check server response using shell script
 
     sh currencyRatesTest.sh
+
+### Test application
+
+    npm install
+    npm run test
     
