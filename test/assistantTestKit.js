@@ -41,6 +41,19 @@ const assistant = {
         request.result.action = action;
         request.result.parameters = obj.parameters || request.result.parameters;
         request.result.contexts = obj.contexts || request.result.contexts;
+
+        if(obj.accessToken) {
+            request.originalRequest = {
+                data: {
+                      user: {
+                          lastSeen: "2017-12-21T10:53:48Z",
+                          accessToken: obj.accessToken,
+                          locale: lang,
+                          userId: "ABwppHEBJIHRIfKHPY14MI1dzRPpv57BZ6nawLyt6O80-bd87Stb3YrNQ7_B9TCcUf0LnvK0uZESjL9h_Xc"
+                      }
+                }
+            }
+        }
         return request;
     }
 };
