@@ -105,7 +105,11 @@ function processV1Request(request, response) {
         action = 'default';
     }
 
-    actionHandlers[action]();
+    try {
+        actionHandlers[action]();
+    } catch(e) {
+        log.error(`Unhandled error: ${e.message}`);
+    }
 
     ///////////////////////////////////////
     ////////// RESPONSE CREATORS //////////
