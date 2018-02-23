@@ -108,7 +108,8 @@ function processV1Request(request, response) {
     try {
         actionHandlers[action]();
     } catch(e) {
-        log.error(`Unhandled error: ${e.message}`);
+        log.error(`Unhandled error. ${e}`);
+        log.error(e.stack);
     }
 
     ///////////////////////////////////////
