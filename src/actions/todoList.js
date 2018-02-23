@@ -5,7 +5,7 @@ const https = require('https');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const todoList = (app, l10n, speech, receiver) => {
-    if (!app.getUser().accessToken) {
+    if (!app.getUser() || !app.getUser().accessToken) {
         receiver('You need to sign-in before using the app.');
         return;
     }

@@ -13,9 +13,9 @@ const todoInitPayment = (app, l10n, speech, receiver) => {
     // 2. Pay by the itemId
     //
 
-    // if (!app.getUser().accessToken) {
-        // receiver('You need to sign-in before using the app.');
-        // return;
+    // if (!app.getUser() || !app.getUser().accessToken) {
+    //     receiver('You need to sign-in before using the app.');
+    //     return;
     // }
 
     let accessToken = "5857c68c-bcc1-370d-98bb-06170aeb8135"//app.getUser().accessToken;
