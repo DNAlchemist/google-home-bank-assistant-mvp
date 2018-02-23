@@ -14,7 +14,7 @@ describe('currencyRates', () => {
                 currency: ["USD"]
             }
         }, (err, res) => {
-            res.assertSpeech("ru", "Курс покупки 1 доллара: 56.9 рублей, курс продажи: 55.9 рублей");
+            res.assertSpeech("ru", /Курс покупки 1 доллара: \d\d.\d рублей, курс продажи: \d\d.\d рублей/);
             done()
         });
     })

@@ -21,6 +21,10 @@ const assistant = {
                         assertSpeech: function (langForCheck, text) {
                             if(lang === langForCheck) {
                                 res.should.have.status(200);
+                                if(text instanceof RegExp) {
+                                    res.body.should.have.property('speech').match(text);
+                                    return;
+                                }
                                 res.body.should.have.property('speech').eql(text);
                             }
                         }
