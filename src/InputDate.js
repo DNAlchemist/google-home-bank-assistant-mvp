@@ -11,6 +11,7 @@ function DateComparator(parameters) {
 DateComparator.prototype.isInterceptWith = function(date) {
     if(this.parameters["date"]) {
         const requestDate = new Date(this.parameters["date"]);
+        requestDate.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
         log.debug(`Compare "${date}" with "${requestDate}"`);
         return date.getTime() === requestDate.getTime();
     }
@@ -21,6 +22,7 @@ DateComparator.prototype.isInterceptWith = function(date) {
 
         const activeFrom = new Date(period[0]);
         const activeTo = new Date(period[1]);
+        activeTo.setHours(23, 59, 59, 999);
 
         return date >= activeFrom && date <= activeTo;
 

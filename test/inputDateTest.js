@@ -31,19 +31,35 @@ describe('Date comparator', () => {
 
     it('period intercept lower bound', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
-        assert(dateComparator.isInterceptWith(new Date("2018-02-25")));
+        assert(dateComparator.isInterceptWith(new Date("2018-02-01")));
         done()
     });
 
     it('period intercept upper bound', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
-        assert(dateComparator.isInterceptWith(new Date("2018-02-01")));
+        assert(dateComparator.isInterceptWith(new Date("2018-02-25")));
+        done()
+    });
+
+    it('period intercept upper bound noon', (done) => {
+        const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
+        const date = new Date("2018-02-25");
+        date.setHours(12);
+        assert(dateComparator.isInterceptWith(date));
         done()
     });
 
     it('date equals', (done) => {
         const dateComparator = new InputDate({"date" : "2018-02-01"});
         assert(dateComparator.isInterceptWith(new Date("2018-02-01")));
+        done()
+    });
+
+    it('date equals noon', (done) => {
+        const dateComparator = new InputDate({"date" : "2018-02-01"});
+        const date = new Date("2018-02-01");
+        date.setHours(12);
+        assert(dateComparator.isInterceptWith(date));
         done()
     });
 
