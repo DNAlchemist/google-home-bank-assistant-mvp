@@ -3,9 +3,9 @@
 const InputDate = require('../src/InputDate.js');
 const assert = require('assert');
 
-describe('Date comparator', () => {
+describe('InputDate', () => {
 
-    it('no date parameters', (done) => {
+    it('No date parameters', (done) => {
         const dateComparator = new InputDate({});
         try {
           dateComparator.isInterceptWith(new Date("2018-02-27"))
@@ -17,31 +17,31 @@ describe('Date comparator', () => {
         done(new Error("No exception thrown"));
     });
 
-    it('period intercept test', (done) => {
+    it('Period intercept test', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
         assert(dateComparator.isInterceptWith(new Date("2018-02-15")));
         done()
     });
 
-    it('period not intercept test', (done) => {
+    it('Period not intercept test', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
         assert(!dateComparator.isInterceptWith(new Date("2018-02-27")));
         done()
     });
 
-    it('period intercept lower bound', (done) => {
+    it('Period intercept lower bound', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
         assert(dateComparator.isInterceptWith(new Date("2018-02-01")));
         done()
     });
 
-    it('period intercept upper bound', (done) => {
+    it('Period intercept upper bound', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
         assert(dateComparator.isInterceptWith(new Date("2018-02-25")));
         done()
     });
 
-    it('period intercept upper bound noon', (done) => {
+    it('Period intercept upper bound noon', (done) => {
         const dateComparator = new InputDate({"date-period" : "2018-02-01/2018-02-25"});
         const date = new Date("2018-02-25");
         date.setHours(12);
@@ -49,13 +49,13 @@ describe('Date comparator', () => {
         done()
     });
 
-    it('date equals', (done) => {
+    it('Date equals', (done) => {
         const dateComparator = new InputDate({"date" : "2018-02-01"});
         assert(dateComparator.isInterceptWith(new Date("2018-02-01")));
         done()
     });
 
-    it('date equals noon', (done) => {
+    it('Date equals noon', (done) => {
         const dateComparator = new InputDate({"date" : "2018-02-01"});
         const date = new Date("2018-02-01");
         date.setHours(12);
@@ -63,7 +63,7 @@ describe('Date comparator', () => {
         done()
     });
 
-    it('date not equals', (done) => {
+    it('Date not equals', (done) => {
         const dateComparator = new InputDate({"date" : "2018-02-01"});
         assert(!dateComparator.isInterceptWith(new Date("2018-02-02")));
         done()
