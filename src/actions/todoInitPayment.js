@@ -18,7 +18,7 @@ const todoInitPayment = (app, l10n, speech, receiver) => {
     //     return;
     // }
 
-    let accessToken = "5857c68c-bcc1-370d-98bb-06170aeb8135"//app.getUser().accessToken;
+    let accessToken = "c367a24e-80c8-41c6-8b55-e95c2eb4b9a5";//app.getUser().accessToken;
     //log.info("That's ok, you are signed in, your access_token is " + app.getUser().accessToken);
 
     const request = https.request(todoApi().options({access_token: accessToken}), function (res) {

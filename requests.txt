@@ -1,0 +1,22 @@
+curl https://testsense.alfabank.ru/mobile/api/v2/todo -ik -H "Authorization: Bearer c367a24e-80c8-41c6-8b55-e95c2eb4b9a5"
+
+curl -XPOST https://testsense.alfabank.ru/mobile/api/v2/todo -ik -H "Authorization: Bearer c367a24e-80c8-41c6-8b55-e95c2eb4b9a5"  --data '{
+"date" : "2018-02-15T12:00:00.000+0300",
+"name" : "Оплата интернета",
+"categoryId" : "00012",
+"reference" : "A012806170000017",
+"regularity" : "ONCE" }' -H "Content-Type: application/json"
+
+curl -XPOST https://testsense.alfabank.ru/mobile/api/v2/todo -ik -H "Authorization: Bearer c367a24e-80c8-41c6-8b55-e95c2eb4b9a5"  --data '{
+"date" : "2018-02-25T12:00:00.000+0300",
+"name" : "Оплата мобильной связи",
+"categoryId" : "00012",
+"reference" : "A012806170000017",
+"regularity" : "ONCE" }' -H "Content-Type: application/json"
+
+curl -XDELETE https://testsense.alfabank.ru/mobile/api/v2/todo/dc527ef8e1e44c3d9acf626052d1fb7e -ik -H "Authorization: Bearer c367a24e-80c8-41c6-8b55-e95c2eb4b9a5"
+
+
+curl -XPOST https://testsense.alfabank.ru/mobile/api/v2/todo -ik -H "Authorization: Bearer c367a24e-80c8-41c6-8b55-e95c2eb4b9a5"  --data \
+'{"date":"2018-03-25T12:00:00.000+0300","name":"Оплата интернета","categoryId":"00012","reference":"A012806170000017","regularity":"ONCE"}' \
+ -H "Content-Type: application/json"

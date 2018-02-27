@@ -19,6 +19,7 @@ const assistant = {
                 .end(function(err, res) {
                     callback(err, {
                         assertSpeech: function (langForCheck, text) {
+                            console.log(res.body)
                             if(lang === langForCheck) {
                                 res.should.have.status(200);
                                 if(text instanceof RegExp) {

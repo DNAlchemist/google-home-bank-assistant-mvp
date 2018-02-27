@@ -101,6 +101,9 @@ function buildArgumentList(template, arguments) {
  * incline('Ассистент', 'Д', (str) => { assert str == 'Ассисенту' });
  */
 L10N.prototype.incline = function (w, c, callback) {
+    if (!callback) {
+        return new Promise(resolve => this.incline(w, c, resolve));
+    }
     if (this.lang !== 'ru') {
         callback(w);
         return;
