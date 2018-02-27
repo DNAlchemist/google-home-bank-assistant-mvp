@@ -1,3 +1,4 @@
+'use strict';
 const Logger = require('../logger.js');
 const InputDate = require('../InputDate.js');
 const log = new Logger(Logger.lookupName(__filename));
@@ -8,7 +9,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const todoList = (app, l10n, speech, receiver) => {
     if (!app.getUser() || !app.getUser().accessToken) {
-        receiver('You need to sign-in before using the app.');
+        app.askForSignIn();
         return;
     }
 
